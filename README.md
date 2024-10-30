@@ -17,7 +17,8 @@ The key components are:
 * AnalysisReport Class: Generates formatted reports to display the statistical analysis results, either on the screen or in a file.
 
 ## Getting Started
-
+### Getting the data
+* Download the liver cancer data GSE 14520_U133A.csv (approx. 135MB) from the <a href="https://sbcb.inf.ufrgs.br/cumida">CuMiDa</a> website
 ### Dependencies
 
 * Python 3.x
