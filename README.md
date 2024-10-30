@@ -60,6 +60,9 @@ AVAILABLE PARAMETERS:
 * --threshold: Threshold value for filtering gene expression.
 * --genes_above_threshold: List of gene names to find values above the threshold (optional).
 * --output: Output destination(s) for the report (e.g., 'screen', 'output.txt').
+* --add: Add a new output destination.
+* --remove: Remove an existing output destination.
+* --check: Check if a specific destination is in the output destinations list.
 
 
 ## Help
