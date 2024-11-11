@@ -125,16 +125,10 @@ def main():
 
 ###################################################################################
 
-    # Prepare the analysis results
-    analysis_results = []
-
     # Get gene names
     if args.get_all_gene_names:
         gene_names = gene_data.get_gene_names()
-        
-        # For display purposes
-        gene_names = ', '.join(gene_names)
-        analysis_results.append({"Gene Names Are": gene_names})
+        report.append_gene_names(gene_names)
 
 
     # Get gene expression values
@@ -143,10 +137,7 @@ def main():
 
         # If the gene name doesn't exist, we print the error message
         if isinstance(gene_exps, list):
-
-            # For display purposes
-            gene_exps = ', '.join(map(str, gene_exps))
-            analysis_results.append({f"The {args.gene_name} expression values": f"{gene_exps}"})
+            report.append_gene_exp(args.gene_name, gene_exps)
 
         else:
             print(gene_exps)
@@ -158,14 +149,7 @@ def main():
 
         # If the gene name doesn't exist, the exception handling returns a string
         if isinstance(genes_stat_info, dict):
-            for gene, info in genes_stat_info.items():
-
-        # THE INDENTATION OF FSTRING IS FOR DISPLAY PURPOSES
-                analysis_results.append({f"Gene Name: {gene}": f"""
-Expression Mean: {info['mean']}
-Expression Stdev: {info['stdev']}
-Expression Median: {info['median']}"""})
-                
+            report.append_stats(genes_stat_info)     
         else:
             print(genes_stat_info)
 
@@ -176,8 +160,7 @@ Expression Median: {info['median']}"""})
 
         # If the gene name doesn't exist, the exception handling returns a string
         if isinstance(differential, dict):
-            for gene, diff in differential.items():
-                analysis_results.append({f"Difference of Means for {gene} gene between normal and hcc groups": f"{diff}"})
+            report.append_diff(differential)
         else:
             print(differential)
 
@@ -185,15 +168,7 @@ Expression Median: {info['median']}"""})
     # Find top n differentially expressed genes if requested
     if args.top_n:
         top_genes = stats_analysis.top_n_differential(args.top_n)
-        i = 0
-        # This is to create a title for this section
-        analysis_results.append({f'Top {args.top_n} Genes': ''})
-
-        for top in top_genes:
-            i+=1
-            # Remember we had to change the order of gene name
-            # and difference value for qheap to work, the order is: (value, name)
-            analysis_results.append({f"No.{i}) Gene Name: {top[1]}": f"Absolute Mean Difference: {top[0]}"})
+        report.append_top(args.top_n, top_genes)
 
 
     # Find genes expressed above a threshold if requested
@@ -205,35 +180,14 @@ Expression Median: {info['median']}"""})
 
         # Check if there was an exception (if yes, it'll return a string)
         if isinstance(threshold_results, dict):
-            for gene, info in threshold_results.items():
-
-                # If there are no expressions above threshold
-                # we'll have a string as the value for the gene in its dictionary
-                if isinstance(info, str):
-                    analysis_results.append({f'For Gene {gene}': f'{info}'})
-
-                else:
-                    # The next four lines are written for better display of the results
-                    analysis_results.append({f'For Gene {gene}': ''})
-
-                    # Iterate through every tuple of (sample, status, value) and create a dict
-                    # to append to the results list so that we can display each sample's info
-                    # In a single line.
-                    for data in info['info']:
-                        analysis_results.append({f':{data[0]}': f'{data[1]} {data[2]}'})
-
-                    analysis_results.append({f'HCC Percentage For Gene {gene}': info['hcc_percentage']})
-
+            report.append_thrsh(threshold_results)
         else:
             # if the gene is not found it'll print the returned exception message
             print(threshold_results)
 
 
     # Generate the report
-    if analysis_results:
-        report.output_report(analysis_results)
-    else:
-        print("No analysis was performed. Please provide arguments to perform an analysis.")
+    report.output_report()
 
 # Executes main only if the script is directly executed
 # Not when it's imported
