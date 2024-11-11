@@ -47,7 +47,7 @@ Ensure that your Python environment is set up with the necessary modules before 
 * Replace data/liver_cancer_gene_expression.csv with the path to your input data file. 
 * Example of commandline execution
 ```
-python3 main.py --data_file data/Liver_GSE14520_U133A.csv --threshold 6 --genes_above_threshold 121_at  --statistics 121_at --differential 121_at --output sample
+python3 main.py --data_file Liver_GSE14520_U133A.csv --threshold 6 --genes_above_threshold 121_at  --statistics 121_at --differential 121_at --output sample
 
 ```
 AVAILABLE PARAMETERS: 
